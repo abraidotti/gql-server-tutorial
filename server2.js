@@ -9,7 +9,8 @@ var schema = buildSchema(`
         courses(topic: String): [Course]
     },
     type Mutation {
-        updateCourseTopic(id: Int!, topic: String!): Course
+        updateCourseTopic(id: Int!, topic: String!): Course,
+        updateCourseAuthor(id: Int!, author: String!): Course
     },
     type Course {
         id: Int
@@ -74,10 +75,21 @@ var updateCourseTopic = function({id, topic}) {
     return coursesData.filter(course => course.id === id) [0];
 }
 
+var updateCourseAuthor = function({id, author}) {
+    coursesData.map(course => {
+        if (course.id === id) {
+            course.author = author;
+            return course;
+        }
+    });
+    return coursesData.filter(course => course.id === id) [0];
+}
+
 var root = {
     course: getCourse,
     courses: getCourses,
-    updateCourseTopic: updateCourseTopic
+    updateCourseTopic: updateCourseTopic,
+    updateCourseAuthor: updateCourseAuthor
 };
 
 // Create an express server and a GraphQL endpoint
